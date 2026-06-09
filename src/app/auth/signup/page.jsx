@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { Button, Input } from "@heroui/react";
 import { Eye, EyeSlash, Person, At, Lock, ArrowLeft, LogoGithub } from "@gravity-ui/icons";
@@ -15,6 +16,7 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] =  useState('seeker')
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,6 +41,7 @@ export default function SignUpPage() {
       name: form.name,
       email: form.email,
       password: form.password,
+      role: role
     });
 
     setLoading(false);
@@ -161,6 +164,7 @@ export default function SignUpPage() {
                   placeholder="Min. 8 characters"
                   className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-12 text-sm text-white placeholder-gray-500 outline-none transition focus:border-violet-500/50 focus:bg-white/[0.07] focus:ring-1 focus:ring-violet-500/30"
                 />
+
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -182,6 +186,28 @@ export default function SignUpPage() {
                   }
                 </p>
               )}
+            </div>
+            <div className="flex flex-col gap-4">
+              <Label>Select Role</Label>
+              <RadioGroup onChange={value =>setRole(value)} defaultValue="seeker" name="plan-orientation" orientation="horizontal">
+                <Radio selected value="seeker">
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  <Radio.Content>
+                    <Label>Job Seeker</Label>
+                
+                  </Radio.Content>
+                </Radio>
+                <Radio value="recruiter">
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  <Radio.Content>
+                    <Label>Recruiter</Label>
+                  </Radio.Content>
+                </Radio>
+              </RadioGroup>
             </div>
 
             {/* Submit Button */}

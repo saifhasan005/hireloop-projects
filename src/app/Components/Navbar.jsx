@@ -2,9 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@heroui/react";
+import { Avatar, Button } from "@heroui/react";
+import { signOut, useSession } from "@/lib/auth-client";
+
 
 export default function Navbar() {
+  const handleSignOut = async () => {
+    await signOut()
+  }
+  const {
+    data: session
+  } = useSession();
+  const user = session?.user;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
@@ -48,23 +57,30 @@ export default function Navbar() {
             <div className="h-6 w-px bg-white/20" />
 
             {/* Auth Buttons */}
-            <div className="flex items-center gap-4">
-              <Link
-                href="/auth/signin"
-                className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
-              >
-                Sign In
-              </Link>
+            {user ? <>
+              <Button variant="danger" className={`rounded-none`} onClick={handleSignOut}>SignOut</Button>
+              <Avatar>
+                <Avatar.Image alt="John Doe" />
+                <Avatar.Fallback>{user?.name[0]}</Avatar.Fallback>
+              </Avatar>
+            </> :
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/auth/signin"
+                  className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
+                >
+                  Sign In
+                </Link>
 
-              <Button
-                as={Link}
-                href="/register"
-                radius="lg"
-                className="h-11 bg-white px-6 text-sm font-semibold text-black hover:bg-gray-200"
-              >
-                Get Started
-              </Button>
-            </div>
+                <Button
+                  as={Link}
+                  href="/register"
+                  radius="lg"
+                  className="h-11 bg-white px-6 text-sm font-semibold text-black hover:bg-gray-200"
+                >
+                  Get Started
+                </Button>
+              </div>}
           </div>
 
           {/* MOBILE MENU BUTTON */}
@@ -104,7 +120,13 @@ export default function Navbar() {
               ))}
             </ul>
 
-            <div className="border-t border-white/10 pt-4">
+            {user ? <div className="flex gap-2">
+              <Button variant="danger" className={`rounded-none`} onClick={handleSignOut}>SignOut</Button>
+              <Avatar>
+                <Avatar.Image alt="John Doe" />
+                <Avatar.Fallback>{user?.name[0]}</Avatar.Fallback>
+              </Avatar>
+            </div> : <div className="border-t border-white/10 pt-4">
               <div className="flex flex-col gap-3">
                 <Link
                   href="/auth/signin"
@@ -123,7 +145,7 @@ export default function Navbar() {
                   Get Started
                 </Button>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       )}
